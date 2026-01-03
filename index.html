@@ -1,11 +1,206 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>saketh</title>
-    <link rel="icon" href=">faviconn.ico?v=2">
-  </head>
-  <body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dropset Pin</title>
 
-  </body>
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #fff;
+    }
+
+    /* ================= HERO SECTION ================= */
+    .hero {
+      height: 100vh;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.65), rgba(0,0,0,.95)),
+        url("https://postimg.cc/gnHwhvcH"); /* 👈 HIGHLIGHTED */
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 40px;
+    }
+
+    /* ================= FLOATING ORDER BUTTON ================= */
+    .float-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #d4af37, #f3c969);
+      color: #000;
+      padding: 16px 34px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      z-index: 999;
+      text-decoration: none; /* ❌ NO UNDERLINE */
+    }
+
+    /* ================= DESCRIPTION ================= */
+    .section {
+      padding: 60px 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .bullets {
+      list-style: none;
+      padding: 0;
+    }
+
+    .bullets li {
+      margin: 14px 0;
+      font-size: 18px;
+    }
+
+    /* ================= FORM ================= */
+    .form-box {
+      background: #111;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(0,0,0,.6);
+    }
+
+    input, textarea {
+      width: 100%;
+      margin-bottom: 14px;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: #f1f5ff;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .pay-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #d4af37, #f3c969);
+      color: #000;
+      font-weight: 700;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      text-decoration: none; /* ❌ NO UNDERLINE */
+    }
+
+    footer {
+      text-align: center;
+      color: #aaa;
+      padding: 30px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <section class="hero"></section>
+
+  <!-- FLOATING BUTTON -->
+  <button class="float-btn" id="floatBtn" onclick="scrollToForm()">Order Now</button>
+
+  <!-- DESCRIPTION -->
+  <section class="section">
+    <ul class="bullets">
+      <li>⚡ Switch weights instantly — no breaks</li>
+      <li>💪 Train harder, faster & smarter</li>
+      <li>🔥 Built for serious lifters only</li>
+      <li>👻 Small pin, massive performance upgrade</li>
+    </ul>
+  </section>
+
+  <!-- FORM -->
+  <section class="section" id="orderForm">
+    <div class="form-box">
+      <h2>Shipping Details</h2>
+
+      <input id="name" placeholder="Full Name" required>
+      <input id="phone" placeholder="Phone Number" required>
+      <input id="email" placeholder="Email Address" required>
+
+      <input id="flat" placeholder="Flat / Apartment No" required>
+      <input id="address" placeholder="Area / Street Name" required>
+      <input id="landmark" placeholder="Landmark" required>
+
+      <input id="district" placeholder="District" required>
+      <input id="state" placeholder="State" required>
+      <input id="pincode" placeholder="Pincode" required>
+
+      <input id="upi" placeholder="Your UPI ID (for record)" required>
+
+      <button class="pay-btn" onclick="payAndSend()">Pay & Place Order</button>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 Dropset Pin • Premium Fitness Gear
+  </footer>
+
+<script>
+  emailjs.init("tYO6zSCP5YHIYsgoe");
+
+  function scrollToForm() {
+    document.getElementById("orderForm").scrollIntoView({ behavior: "smooth" });
+  }
+
+  // Hide floating button when scrolling down
+  let lastScroll = 0;
+  window.addEventListener("scroll", () => {
+    const btn = document.getElementById("floatBtn");
+    let current = window.pageYOffset;
+    btn.style.display = current > lastScroll ? "none" : "block";
+    lastScroll = current;
+  });
+
+  function payAndSend() {
+    const data = {
+      name: name.value,
+      phone: phone.value,
+      email: email.value,
+      flat: flat.value,
+      address: address.value,
+      landmark: landmark.value,
+      district: district.value,
+      state: state.value,
+      pincode: pincode.value,
+      upi: upi.value
+    };
+
+    // ✅ CLEAN, SPECIFIC EMAIL FORMAT
+    emailjs.send("service_j229e6w", "template_n4l5sq5", data);
+
+    // ✅ MOBILE‑SAFE UPI LINK
+    const payLink =
+      `upi://pay?pa=7675842133@ybl` +
+      `&pn=Dropset Pin` +
+      `&am=999` +
+      `&cu=INR` +
+      `&tn=Order from ${encodeURIComponent(data.name)}`;
+
+    window.location.href = payLink;
+  }
+</script>
+
+</body>
 </html>
